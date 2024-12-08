@@ -44,21 +44,17 @@ class Author:
         return self._name
 
     def articles(self, magazine=None):
-        # Return articles by this author, optionally filtered by magazine
         if magazine:
             return [article for article in Article.all if article.author == self and article.magazine == magazine]
         return [article for article in Article.all if article.author == self]
 
     def magazines(self):
-        # Return a list of unique magazines this author has written for
         return list(set(article.magazine for article in self.articles()))
 
     def add_article(self, magazine, title):
-        # Create a new article for this author and associate it with the magazine
         return Article(self, magazine, title)
 
     def topic_areas(self):
-        # Return unique list of categories of magazines this author has written for
         topics = list(set(magazine.category for magazine in self.magazines()))
         return topics if topics else None
 
@@ -104,11 +100,9 @@ class Magazine:
         return list(set(article.author for article in self.articles()))
 
     def article_titles(self):
-        # Return a list of titles of all articles for this magazine
         return [article.title for article in self.articles()] if self.articles() else None
 
     def contributing_authors(self):
-        # Return a list of authors who have written more than 2 articles for this magazine
         contributing_authors = []
         for author in self.contributors():
             if len([article for article in author.articles(self) if article.magazine == self]) > 2:
@@ -118,11 +112,9 @@ class Magazine:
 
     @classmethod
     def top_publisher(cls):
-        # Return the magazine with the most articles
         if not cls.all:
             return None
 
-        # Count articles for each magazine
         article_counts = {magazine: len(magazine.articles()) for magazine in cls.all}
         top_magazine = max(article_counts, key=article_counts.get)
 
